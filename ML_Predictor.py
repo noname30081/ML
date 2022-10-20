@@ -13,6 +13,7 @@ modelStartDay = datetime.date(2021,5,1)
 basic_status = 0
 TrainDatas = pd.DataFrame()
 model = prophet.Prophet(changepoint_prior_scale= 0.9,interval_width=0.8,changepoint_range=1)
+
 High_n=0.0#最近最高價
 Low_n=0.0#最近最低價
 
