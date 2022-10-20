@@ -53,8 +53,32 @@ def predict_action(row_data) :
     forecast.head()
     forecast['yhat'][0] = forecast['yhat'][0] + TrainDatas['SUPPORT'][len(TrainDatas.index)-1]*1.5
 
+    close=TrainDatas['CLOSE'][len(TrainDatas.index)-1]
+    High_n=TrainDatas['MAX'][len(TrainDatas.index)-1]
+    Low_n=TrainDatas['MIN'][len(TrainDatas.index)-1]
+    High = 0
+    Low = 0
+    serchLen = 0
+    if(len(TrainDatas.index) >= 10) :
+        serchLen = 10
+    else :
+        serchLen = len(TrainDatas.index)
+    
+    for sr in range(0,serchLen) :
+        High = TrainDatas['MAX'][len(TrainDatas.index)-1-sr]
+        Low = TrainDatas['MIN'][len(TrainDatas.index)-1-sr]
+        #判斷最近日期最高價
+        if High_n<High:
+            High_n=High
+        #判斷最近日期最價
+        if Low_n>Low:
+            Low_n=Low
+    
+    #威廉指標
+    wr=-(High_n-close)/(High_n-Low_n)
+
     act = 0
-    if(forecast['yhat'][0] <= TrainDatas['CLOSE'][len(TrainDatas.index)-1]):
+    if((forecast['yhat'][0] <= TrainDatas['CLOSE'][len(TrainDatas.index)-1]) or (wr>-0.2 and wr<=-0)):
         if(basic_status == -1) :
             basic_status = -1
             act = 0
@@ -64,7 +88,7 @@ def predict_action(row_data) :
         else :
             basic_status = 0
             act = -1
-    elif(forecast['yhat'][0] >= TrainDatas['CLOSE'][len(TrainDatas.index)-1]) :
+    elif((forecast['yhat'][0] >= TrainDatas['CLOSE'][len(TrainDatas.index)-1]) or (wr>=-1 and wr<-0.8) or (wr<=-0.2 and wr>=-0.8)) :
         if(basic_status == 0) :
             basic_status = 1
             act = 1
