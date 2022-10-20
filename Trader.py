@@ -1,3 +1,4 @@
+from itertools import count
 import pandas as pd
 import csv
 
@@ -30,14 +31,19 @@ if __name__ == '__main__':
     import ML_Predictor as trader
     # The following part is an example.
     # You can modify it at will.
-    #training_data = load_data(args.training)
-    training_data = load_data(r'D:\Master Degree\Lesson\ML\HW1\program\ML\DataSet\training_data.csv')
+    training_data = load_data(args.training)
+    #training_data = load_data(r'D:\Master Degree\Lesson\ML\HW1\program\ML\DataSet\training_data.csv')
     trader.train(training_data)
 
-    #testing_data = load_data(args.testing)
-    testing_data = load_data(r'D:\Master Degree\Lesson\ML\HW1\program\ML\DataSet\testing_data.csv')
+    testing_data = load_data(args.testing)
+    #testing_data = load_data(r'D:\Master Degree\Lesson\ML\HW1\program\ML\DataSet\testing_data.csv')
+
+    counter = len(testing_data.index)
     with open(args.output, 'w') as output_file:
         for row in testing_data.iterrows():
+            if(counter == 1) :
+                break
+
             #print(testing_data)
             #print(type(row))
             # We will perform your action as the open price in the next day.
@@ -46,4 +52,5 @@ if __name__ == '__main__':
 
             # this is your option, you can leave it empty.
             trader.re_training()
+            counter = counter - 1
 
